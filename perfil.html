@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - </title>
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="perfil.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+</head>
+<body>
+   
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="principal.html">Minha Loja</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="carrinho.html">Carrinho</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="perfil.html">Perfil</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Produtos
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="produtos.html">Decoração</a></li>
+                            <li><a class="dropdown-item" href="eletronicos.html">Eletrônicos</a></li>
+                            <li><a class="dropdown-item" href="roupas.html">Roupas</a></li>
+                            <li><a class="dropdown-item" href="livros.html">Livros</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html" onclick="logout()">Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h2>Meu Perfil</h2>
+        <div id="perfilUsuario">
+            <!-- Dados do usuário serão preenchidos dinamicamente -->
+        </div>
+        <button onclick="editarPerfil()">Editar Perfil</button>
+    </div>
+
+    <div id="modalEditarPerfil" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalEditarPerfil()">&times;</span>
+            <h2>Editar Perfil</h2>
+            <form id="formEditarPerfil" onsubmit="return salvarPerfil()">
+                <div class="form-group">
+                    <label for="loginEdit">Login:</label>
+                    <input type="text" id="loginEdit" name="login" required>
+                </div>
+                <div class="form-group">
+                    <label for="senhaEdit">Senha:</label>
+                    <input type="password" id="senhaEdit" name="senha" required>
+                </div>
+                <div class="form-group">
+                    <label for="fotoPerfil">Foto de Perfil:</label>
+                    <input type="file" id="fotoPerfil" name="fotoPerfil" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <button type="submit">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+    <script>
+        // Recuperar e exibir dados do perfil do usuário
+        let usuarioArmazenado = localStorage.getItem('usuario');
+        if (usuarioArmazenado) {
+            let usuario = JSON.parse(usuarioArmazenado);
+            exibirDadosPerfil(usuario);
+        } else {
+            // Se não há usuário logado, redirecionar para tela de login
+            window.location.href = 'login.html';
+        }
+
+        function exibirDadosPerfil(usuario) {
+            document.getElementById('perfilUsuario').innerHTML = `
+                <p><strong>Nome:</strong> ${usuario.nome}</p>
+                <p><strong>Data de Nascimento:</strong> ${usuario.dataNascimento}</p>
+                <p><strong>Sexo:</strong> ${usuario.sexo === 'M' ? 'Masculino' : 'Feminino'}</p>
+                <p><strong>Nome Materno:</strong> ${usuario.nomeMaterno}</p>
+                <p><strong>CPF:</strong> ${usuario.cpf}</p>
+                <p><strong>Telefone Celular:</strong> ${usuario.telefoneCelular}</p>
+                <p><strong>Telefone Fixo:</strong> ${usuario.telefoneFixo}</p>
+                <p><strong>Endereço:</strong> ${usuario.endereco}</p>
+                <p><strong>Login:</strong> ${usuario.login}</p>
+                <p><strong>Foto de Perfil:</strong> <img src="${usuario.fotoPerfil || 'avatar-padrao.png'}" alt="Foto de Perfil" width="100"></p>
+            `;
+        }
+
+        function editarPerfil() {
+            let usuario = JSON.parse(localStorage.getItem('usuario'));
+
+            document.getElementById('loginEdit').value = usuario.login;
+
+            // Abrir modal de edição
+            document.getElementById('modalEditarPerfil').style.display = 'block';
+        }
+
+        function salvarPerfil() {
+            let usuario = JSON.parse(localStorage.getItem('usuario'));
+
+            usuario.login = document.getElementById('loginEdit').value.trim();
+            usuario.senha = document.getElementById('senhaEdit').value.trim();
+
+            // Simulação de upload de foto (não persistido no localStorage neste exemplo)
+            let fotoPerfilInput = document.getElementById('fotoPerfil');
+            if (fotoPerfilInput.files.length > 0) {
+                let fotoPerfil = fotoPerfilInput.files[0];
+                // Aqui você poderia processar o upload para um servidor e armazenar o caminho da imagem
+                // Mas aqui vamos apenas mostrar a imagem no perfil
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    usuario.fotoPerfil = e.target.result;
+                    localStorage.setItem('usuario', JSON.stringify(usuario));
+                    exibirDadosPerfil(usuario);
+                };
+                reader.readAsDataURL(fotoPerfil);
+            } else {
+                localStorage.setItem('usuario', JSON.stringify(usuario));
+                exibirDadosPerfil(usuario);
+            }
+
+            fecharModalEditarPerfil(); // Fechar modal após salvar
+            return false; // Evitar envio do formulário
+        }
+
+        function fecharModalEditarPerfil() {
+            document.getElementById('modalEditarPerfil').style.display = 'none';
+        }
+
+        function logout() {
+            window.location.href = 'login.html';
+        }
+    </script>
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Minha Loja</h5>
+                    <p>Endereço: Rua Exemplo, 123, Cidade, Estado, CEP</p>
+                    <p>Email: contato@minhaloja.com</p>
+                    <p>Telefone: (XX) XXXX-XXXX</p>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">Siga-nos</h5>
+                    <a href="https://www.facebook.com/" class="btn btn-outline-dark btn-floating m-1" role="button"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://x.com" class="btn btn-outline-dark btn-floating m-1" role="button"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/" class="btn btn-outline-dark btn-floating m-1" role="button"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3 bg-dark text-white">
+            © 2024 Minha Loja. Todos os direitos reservados.
+        </div>
+    </footer>
+
+</body>
+</html>

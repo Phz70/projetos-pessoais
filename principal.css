@@ -1,0 +1,54 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+
+
+
+/* Container Styles */
+.container {
+    max-width: 1000px;
+    margin: 2em auto;
+    background-color: #fff;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 1em;
+    text-align: center;
+    color: #0044cc;
+}
+
+p {
+    margin-bottom: 1em;
+    line-height: 1.6;
+}
+
+/* User Info Styles */
+#usuarioLogado {
+    font-weight: bold;
+    color: #0044cc;
+}
+
+/* Card Styles */
+.card {
+    margin-bottom: 1em;
+}
+
+.card-title {
+    color: #0044cc;
+    font-weight: bold;
+}
+
+
